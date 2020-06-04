@@ -1,5 +1,8 @@
 from room import Room
 from player import Player
+
+import textwrap
+
 # Declare all the rooms
 
 room = {
@@ -51,7 +54,30 @@ player = Player("Jojo", room['outside'])
 #
 # If the user enters "q", quit the game.
 user_is_playing = True
+# welcome message
 print("Welcome to the adventure game")
 
 while user_is_playing:
-    pass
+    # print current room & room description
+    print(player.current_room)
+    for line in textwrap.wrap(player.current_room.description):
+        print(line)
+
+    # get user input
+    user_input = input(
+        "[n] North   [s] South  [e] East  [w] West  [q] Quit\n").lower()
+
+    # if user inputs 1 of 4 directions
+    if user_input in ["n", "s", "e", "w"]:
+        user_input = f"{user_input}_to"
+        player.move(user_input)
+
+    # if user inputs quit
+    elif user_input == "q":
+        print("You exited the game. Thank you for playing!")
+        user_is_playing = False
+
+    # else error message of not valid entry
+    else:
+        print(
+            "Invalid entry. Please choose 1 of the 5 given options: [n] North   [s] South  [e] East  [w] West  [q] Quit")

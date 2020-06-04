@@ -6,4 +6,7 @@ class Player:
         self.current_room = current_room
 
     def move(self, direction):
-        pass
+        if hasattr(self.current_room, direction):
+            self.current_room = getattr(self.current_room, direction)
+        else:
+            print("You cannot move in that direction")
