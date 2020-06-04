@@ -57,12 +57,12 @@ player = Player("Jojo", room["outside"])
 
 # welcome message
 print("Welcome to the adventure game")
-print(player.current_room)
-print(textwrap.wrap(player.current_room.description, width=70))
+
 
 # loop starts
 while True:
-
+    print(player.current_room)
+    print(textwrap.wrap(player.current_room.description, width=70))
     # take user input
     user_cmd = input(
         "[n] North   [s] South  [e] East  [w] West  [q] Quit\n").lower()
@@ -79,8 +79,6 @@ while True:
         if hasattr(player.current_room, user_cmd):
             player.current_room = getattr(
                 player.current_room, user_cmd)
-            print(player.current_room)
-            print(textwrap.wrap(player.current_room.description, width=70))
         else:
             print("There's not room with your chosen direction.")
     else:
