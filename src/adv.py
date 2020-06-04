@@ -1,5 +1,9 @@
 from room import Room
 
+from player import Player
+
+import textwrap
+
 # Declare all the rooms
 
 room = {
@@ -38,6 +42,7 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
+player = Player("Jojo", room["outside"])
 
 # Write a loop that:
 #
@@ -49,3 +54,35 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+# welcome message
+print("Welcome to the adventure game")
+print(player.current_room)
+print(textwrap.wrap(player.current_room.description, width=70))
+
+# loop starts
+while True:
+
+    # take user input
+    user_cmd = input(
+        "[n] North   [s] South  [e] East  [w] West  [q] Quit\n").lower()
+    print(f"You chose {user_cmd}")
+# user choose a cardinal direction
+    # if the option is available/not none then go to that room
+    # elif the option is not available/none then throw error and back to user input
+    if user_cmd == "q":
+        print("Bye, hope to see you next time!")
+        exit()
+
+    if user_cmd in ("n", "s", "e", "w"):
+        user_cmd = f"{user_cmd}_to"
+        if hasattr(player.current_room, user_cmd):
+            player.current_room = getattr(
+                player.current_room, user_cmd)
+            print(player.current_room)
+            print(textwrap.wrap(player.current_room.description, width=70))
+        else:
+            print("There's not room with your chosen direction.")
+    else:
+        print(
+            "Please choose 1 of the 5 given options: [n] North   [s] South  [e] East  [w] West  [q] Quit")
