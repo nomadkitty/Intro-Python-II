@@ -55,32 +55,38 @@ player = Player("Jojo", room["outside"])
 #
 # If the user enters "q", quit the game.
 
+user_is_playing = True
 # welcome message
 print("Welcome to the adventure game")
 
 
 # loop starts
-while True:
+while user_is_playing:
+    # print current room and description
     print(player.current_room)
-    print(textwrap.wrap(player.current_room.description, width=70))
+    for line in textwrap.wrap(player.current_room.description, width=200):
+        print(line)
     # take user input
     user_cmd = input(
         "[n] North   [s] South  [e] East  [w] West  [q] Quit\n").lower()
     print(f"You chose {user_cmd}")
 # user choose a cardinal direction
-    # if the option is available/not none then go to that room
-    # elif the option is not available/none then throw error and back to user input
+    # if user inputs q, quit the game
     if user_cmd == "q":
         print("Bye, hope to see you next time!")
         exit()
 
+    # if user inputs 4 directions
     if user_cmd in ("n", "s", "e", "w"):
         user_cmd = f"{user_cmd}_to"
+        # if the direction is available/not none then go to that room
         if hasattr(player.current_room, user_cmd):
             player.current_room = getattr(
                 player.current_room, user_cmd)
+         # else the option is not available/none then throw error and back to user input
         else:
             print("There's not room with your chosen direction.")
+    # any other user input will throw any error
     else:
         print(
             "Please choose 1 of the 5 given options: [n] North   [s] South  [e] East  [w] West  [q] Quit")
