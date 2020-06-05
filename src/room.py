@@ -5,6 +5,13 @@ class Room:
     def __init__(self, name, description):
         self.name = name
         self.description = description
+        self.items = []
 
     def __str__(self):
-        return f"You're currently in {self.name}"
+        if len(self.items) > 0:
+            items_output = "This room has"
+            for i, item in enumerate(self.items):
+                items_output += " " + str(i+1) + "." + item
+            return items_output
+        else:
+            return "There's nothing in this room."

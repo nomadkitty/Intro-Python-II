@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from item import Item
 
 import textwrap
 
@@ -43,6 +44,9 @@ room['treasure'].s_to = room['narrow']
 # Make a new player object that is currently in the 'outside' room.
 player = Player("Jojo", room['outside'])
 
+# initialize items to rooms
+room["foyer"].items = ["coins", "sword"]
+
 # Write a loop that:
 #
 # * Prints the current room name
@@ -59,25 +63,52 @@ print("Welcome to the adventure game")
 
 while user_is_playing:
     # print current room & room description
-    print(player.current_room)
-    for line in textwrap.wrap(player.current_room.description):
+    print(f"Current room: {player.current_room.name}")
+    for line in textwrap.wrap(player.current_room.description, width=200):
         print(line)
+    # print out item list
+    print(player.current_room)
 
     # get user input
     user_input = input(
-        "[n] North   [s] South  [e] East  [w] West  [q] Quit\n").lower()
+        "Please choose [n]North, [s]South, [e]East  [w]West to MOVE, [i]Inventory [take item_name] Take an item, [drop item_name] Drop an item, or [q] Quit\n").lower().split(" ")
 
-    # if user inputs 1 of 4 directions
-    if user_input in ["n", "s", "e", "w"]:
-        user_input = f"{user_input}_to"
-        player.move(user_input)
+    # if user inputs 1 word
+    if len(user_input) == 1:
+        # if user inputs 1 of 4 directions
+        if user_input[0] in ["n", "s", "e", "w"]:
+            user_input[0] = f"{user_input[0]}_to"
+            player.move(user_input[0])
 
-    # if user inputs quit
-    elif user_input == "q":
-        print("You exited the game. Thank you for playing!")
-        user_is_playing = False
+        # if user inputs i for inventory
+        if user_input[0] == "i":
+            player.get_inventory()
+
+        # if user inputs quit
+        elif user_input[0] == "q":
+            print("You exited the game. Thank you for playing!")
+            user_is_playing = False
+
+    # if user inputs 2 words
+    elif len(user_input) == 2:
+        # take item from a room
+        if user_input[0] == "take" or user_input[0] == "get":
+            # check room content to see if content is there
+            for item in player.current_room.items:
+                if item == user_input[1]:
+                    player.take_item(user_input[1])
+                else:
+                    print("There is no such item in this room.")
+        # drop item to a room
+        elif user_input[0] == "drop":
+            for item in player.inventory:
+                if item == user_input[1]:
+                    player.drop_item(user_input[1])
+                else:
+                    print(f"{player.name} doesn't have this item in inventory")
+        else:
+            print("Invalid entry. Please enter 'get' or 'drop' followed by the item. ")
 
     # else error message of not valid entry
     else:
-        print(
-            "Invalid entry. Please choose 1 of the 5 given options: [n] North   [s] South  [e] East  [w] West  [q] Quit")
+        print("Invalid entry.")
